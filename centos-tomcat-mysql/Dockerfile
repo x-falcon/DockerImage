@@ -39,12 +39,15 @@ RUN chmod +x ${CATALINA_HOME}/bin/*sh
 # Create Tomcat admin user
 ADD create_admin_user.sh $CATALINA_HOME/scripts/create_admin_user.sh
 ADD start.sh $CATALINA_HOME/scripts/start.sh
+ADD mysql-init $APP_DATA/mysql-init
+RUN chmod +x $APP_DATA/mysql-init/*.sh
 RUN chmod +x $CATALINA_HOME/scripts/*.sh
 
 # Create tomcat user
 RUN groupadd -r tomcat && \
  useradd -g tomcat -d ${CATALINA_HOME} -s /sbin/nologin  -c "Tomcat user" tomcat && \
- chown -R tomcat:tomcat ${CATALINA_HOME}
+ chown -R tomcat:tomcat ${CATALINA_HOME} &&\
+ chown -R mysql:mysql ${APP_DATA}
 
 WORKDIR /opt/tomcat
 
